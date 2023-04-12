@@ -4,7 +4,7 @@ const app = express()
 // const morgan =require('morgan')
 require("dotenv").config({path: '../.env'});
 const cors =require('cors')
-// const port = 5000
+const bodyParser = require('body-parser');
 const port = process.env.PORT || 5000;
 const cookie_parser=require("cookie-parser")
 const mongoose =require('mongoose')
@@ -22,7 +22,7 @@ app.enable("trust proxy")
 // app.use(fileUpload())
 // app.use(cors())//avoid inter port communication error
 app.use(cors({
-    origin:"https://lfs-project.herokuapp.com",
+    origin:"http://localhost:3000",
     credentials: true
 }));
 app.use(express.static(path.join(__dirname, 'uploads')));
@@ -32,6 +32,23 @@ app.use(cookie_parser())
 // app.use(bodyParser.urlencoded({ extended: true }));
 //Data parsing
 app.use(express.json())
+// app.use(bodyParser.urlencoded({ extended: false }));
+
+// // Parse application/json
+// app.use(bodyParser.json());
+
+// // Parse text/plain for FormData
+// app.use(bodyParser.text({ type: 'text/plain' }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+  if (req.is('text/plain')) {
+    req.body = JSON.parse(querystring.parse(req.body).payload);
+    console.log(req.body);
+  }
+  next();
+});
 // app.use(express.urlencoded({extended:false}))
 //Express session
 // app.use(session({
@@ -60,13 +77,9 @@ app.use(passport.session())
 //     });
 // });
 
-// mongoose.connect('mongodb+srv://swarupkumar:eashok410@lfs.q2in2.mongodb.net/test',{
-//     useNewUrlParser: true,
-//     useUnifiedTopology:true,
-//     useCreateIndex:true
-// })
 
-mongoose.connect(`mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@cluster0.6kk18.mongodb.net/${process.env.MONGO_DB_DATABASE}?retryWrites=true&w=majority`,{
+
+mongoose.connect('mongodb+srv://khilwanisanket:mylfscluster1@cluster0.l0m4anh.mongodb.net/test',{
     useNewUrlParser: true,
     useUnifiedTopology:true,
     useFindAndModify:false,

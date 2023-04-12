@@ -44,36 +44,40 @@ var uploadS3 = multer({
 })
 
 router.post(
-  "/postitem",
+"/postitem",
   requireSignin,
   userMiddleware,
-  uploadS3.array("itemPictures"),
+  //uploadS3.array("itemPictures"),
   async (req, res) => {
-    // console.log(req)
+    //console.log(req)
     console.log("Hitted the POST successfully ");
     try {
       console.log("try");
-      const { name, description, question, type } = req.body;
-      console.log(req.files);
-      // console.log(req.body);
+      console.log(req)
+      //const payload = JSON.parse(req.body);
+      console.log(req.body);
+      // const { name, description, question, type } = payload;
+      //console.log(req.files);
+      //console.log(name);
       // console.log(createdBy)
-      var itemPictures = [];
-      if (req.files.length > 0) {
-        itemPictures = req.files.map((file) => {
-          return { img: file.key };
-        });
-      }
+      // var itemPictures = [];
+      // if (req.files.length > 0) {
+      //   itemPictures = req.files.map((file) => {
+      //     return { img: file.key };
+      //   });
+      // }
 
       //Saving data to db
 
       const newPost = await postitem.create({
-        name: name,
-        description: description,
-        question: question,
-        type: type,
+        name: req.body.name,
+        description: req.body.description,
+        question: req.body.question,
+        type: req.body.type,
         createdBy: req.user._id,
-        itemPictures: itemPictures,
+        //itemPictures: itemPictures,
       });
+      console.log(newPost);
       newPost.save((error, item) => {
         if (error) return res.status(400).json({ error });
         if (item) return res.status(201).json({ item });

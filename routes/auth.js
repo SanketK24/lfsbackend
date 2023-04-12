@@ -15,24 +15,23 @@ const { token } = require('morgan');
 // const { db } = require("../models/signup");
 // const { Router } = require('express');
 // const { token } = require('morgan');
-require("dotenv").config({path: '../../.env'});
-const JWT_SECRET=process.env.JWT_SECRET
-const JWT_EXPIRES=process.env.JWT_EXPIRES
-const NODE_ENV=process.env.NODE_ENV
+require("dotenv").config();
+const JWT_SECRET="your_jwt_secret_here"
+//const JWT_EXPIRES="1h"
+const NODE_ENV="development"
 // console.log(JWT_EXPIRES);
 // console.log(JWT_SECRET);
 
 
+
 const signJwt=(id)=>{
-    return jwt.sign({id},JWT_SECRET,{
-        expiresIn: JWT_EXPIRES
-    })
+    return jwt.sign({id},JWT_SECRET)
 }
 
 const sendToken=(user,statuscode,req,res)=>{
     const token=signJwt(user._id)
     res.cookie("jwt",token,{
-        expires:new Date(Date.now()+JWT_EXPIRES),
+        //expires:new Date(Date.now()+JWT_EXPIRES),
         secure: NODE_ENV==='production'? true:false,
         httpOnly:NODE_ENV==='production'? true:false
     })
@@ -127,7 +126,11 @@ function checkPassword(req,res,next){
     }  
 }
 
-router.get('/',(req,res)=>res.send("This is Home page !!"))
+
+router.get('/',(req,res)=>{
+    //res.send("This is Home page !!")
+    res.send(JWT_SECRET);
+})
 
 router.post('/signup',checkField,checkUsername,checkPassword,async (req,res)=>{
     console.log("Signup :", req.body)
@@ -192,7 +195,7 @@ router.post('/login',checkFieldLogin,(req,res,next)=>{
             if(dbpassword==password){
                 console.log("Logging in")
                 //sendToken(checkUser,201,req,res)
-                const jwt_token=jwt.sign({_id:data._id,role:"user"},process.env.JWT_SECRET,{expiresIn: '1hr'})
+                const jwt_token=jwt.sign({_id:data._id,role:"user"},JWT_SECRET,{expiresIn: '1hr'})
                 // res.send("successfull")
                 res.cookie('token',token,{expiresIn:'1hr'})
                 res.status(200).json({
@@ -285,7 +288,7 @@ router.post('/sendmessage',(req,res)=>{
 
     const mailOption={
         from:email,
-        to:'eswarupkumar1111@gmail.com',
+        to:'khilwanisanket@gmail.com',
         subject:`Review from ${name}`,
         text:message
     }

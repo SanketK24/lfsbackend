@@ -18,7 +18,7 @@ const CategorySchema = new Schema(
       type: String,
       required: true,
     },
-    itemPictures: [{ img: { type: String, required: false } }],
+    //itemPictures: [{ img: { type: String, required: false } }],
     question: {
       type: String,
       required: true,
