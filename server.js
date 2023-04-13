@@ -79,7 +79,7 @@ app.use(passport.session())
 
 
 
-mongoose.connect('mongodb+srv://khilwanisanket:mylfscluster1@cluster0.l0m4anh.mongodb.net/test',{
+mongoose.connect(MONGO,{
     useNewUrlParser: true,
     useUnifiedTopology:true,
     useFindAndModify:false,
