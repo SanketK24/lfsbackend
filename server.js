@@ -79,7 +79,7 @@ app.use(passport.session())
 
 
 
-mongoose.connect(MONGO,{
+mongoose.connect(process.env.MONGO,{
     useNewUrlParser: true,
     useUnifiedTopology:true,
     useFindAndModify:false,
